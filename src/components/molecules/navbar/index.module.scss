@@ -53,5 +53,11 @@
     .loginButton {
       margin-left: 1.25rem;
     }
+    .logoutButton,
+    .dashboardButton {
+      margin: 0.2rem;
+      color: rgb(109, 101, 101);
+      background-color: transparent;
+    }
   }
 }

@@ -108,8 +108,8 @@ const StatsSection = () => {
                 </Col>
                 <Col span={24}>
                   <p className={styles["description"]}>
-                    Duis porta, ligula rhoncus euismod pretium, nisi tellus
-                    eleifend odio.
+                    With our retro approaches, we deliver impactful solutions in
+                    boundary-pushing projects.
                   </p>
                 </Col>
                 <Col span={24}>
@@ -124,19 +124,19 @@ const StatsSection = () => {
         <Row gutter={[16, 16]} align="middle">
           <Col xs={24} md={12}>
             <div className={styles.content}>
-              <h2>There are challenges.</h2>
+              <h2>Innovative Solutions for Your Challenges.</h2>
               <p>
-                Maecenas o venenatis enim, quis porttitor magna. Etiam nec
-                rhoncus neque. Sed quis ultricies eros. Curabitur sit amet eros
-                eu arcu consectetur pulvinar.
+                With our Retro Tools application, you can create custom retro
+                meeting templates tailored to your needs through dynamic steps.
               </p>
               <p>
-                Duis porta, ligula rhoncus euismod pretium, nisi tellus eleifend
-                odio, luctus viverra sem dolor id sem.
+                We enable you to personalize your meeting processes, ensuring a
+                productive retrospective with your team members.
               </p>
               <p>
-                Aliquam sodales, turpis eget tristique tempor, sapien lacus
-                facilisis diam.
+                Our dynamic steps allow you to design meetings that address the
+                most critical aspects of your projects, ensuring that every
+                session is both productive and insightful.
               </p>
             </div>
           </Col>
@@ -162,32 +162,38 @@ const StatsSection = () => {
           </Col>
           <Col xs={24} md={12}>
             <div className={styles.content}>
-              <h2>We have the solution!</h2>
+              <h2>Track and Archive Your Meetings</h2>
               <p>
-                Duis porta, ligula rhoncus euismod pretium, nisi tellus eleifend
-                odio, luctus viverra sem dolor id sem.
+                Keeping track of past decisions and discussions is crucial for
+                long-term success.
               </p>
-              <p>Maecenas o venenatis enim, quis porttitor magna.</p>
-              <Buttons htmlType="button" text="Get Started"></Buttons>
+              <p>
+                Retro Tools offers a robust solution for archiving all your
+                retrospective meetings.
+              </p>
+              <p>
+                Every note, action item, and decision made during your meetings
+                is securely stored, allowing you to easily revisit and review
+                past sessions..
+              </p>
             </div>
           </Col>
         </Row>
         <Row gutter={[16, 16]} align="middle">
           <Col xs={24} md={12}>
             <div className={styles.content}>
-              <h2>There are challenges.</h2>
+              <h2>Export Your Meeting Notes as PDF</h2>
               <p>
-                Maecenas o venenatis enim, quis porttitor magna. Etiam nec
-                rhoncus neque. Sed quis ultricies eros. Curabitur sit amet eros
-                eu arcu consectetur pulvinar.
+                Not only do we store your meeting notes, but we also provide the
+                option to export them as PDFs.
               </p>
               <p>
-                Duis porta, ligula rhoncus euismod pretium, nisi tellus eleifend
-                odio, luctus viverra sem dolor id sem.
+                This feature makes it easy to archive your meeting outcomes and
+                access them whenever you need.
               </p>
               <p>
-                Aliquam sodales, turpis eget tristique tempor, sapien lacus
-                facilisis diam.
+                This not only streamlines your workflow but also enhances the
+                professionalism of your documentation.
               </p>
             </div>
           </Col>
@@ -213,12 +219,15 @@ const StatsSection = () => {
           </Col>
           <Col xs={24} md={12}>
             <div className={styles.content}>
-              <h2>We have the solution!</h2>
+              <h2>Quick and Secure Login with Google</h2>
               <p>
-                Duis porta, ligula rhoncus euismod pretium, nisi tellus eleifend
-                odio, luctus viverra sem dolor id sem.
+                You can log in to Retro Tools quickly and securely using your
+                Google account.
               </p>
-              <p>Maecenas o venenatis enim, quis porttitor magna.</p>
+              <p>
+                This integration enhances your user experience while ensuring
+                the highest level of security for your information.
+              </p>
               <Buttons htmlType="button" text="Get Started"></Buttons>
             </div>
           </Col>

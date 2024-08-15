@@ -1,8 +1,14 @@
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+  User,
+} from "firebase/auth";
 import { db } from "../../firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 
-export const googleLogin = async (): Promise<void> => {
+export const googleLogin = async (): Promise<User | null> => {
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
   try {
@@ -20,9 +26,25 @@ export const googleLogin = async (): Promise<void> => {
     }
 
     console.log("User logged in and data saved:", user);
-    return Promise.resolve();
+    return user;
   } catch (error) {
     console.error("Error logging in with Google:", error);
+    return null;
+  }
+};
+export const googleLogout = async (): Promise<void> => {
+  const auth = getAuth();
+  try {
+    await signOut(auth);
+    console.log("User logged out");
+    return Promise.resolve();
+  } catch (error) {
+    console.error("Error logging out:", error);
     return Promise.reject(error);
   }
+};
+
+export const getCurrentUser = (): User | null => {
+  const auth = getAuth();
+  return auth.currentUser;
 };
