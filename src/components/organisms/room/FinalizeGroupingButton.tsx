@@ -64,19 +64,34 @@ const FinalizeGroupingButton: React.FC<FinalizeGroupingButtonProps> = ({
     }
 
     const roomRef = doc(db, "rooms", roomId);
-    
+
     const unsubscribe = onSnapshot(roomRef, (snapshot) => {
       if (snapshot.exists()) {
         const roomData = snapshot.data();
         if (roomData.is_finished || roomData.is_finalized) {
-      
-          window.location.reload();
+          // Diğer sekmeleri yenilemek için localStorage kullanıyoruz
+          localStorage.setItem("reloadRoom", `${new Date().getTime()}`);
         }
       }
     });
 
     return () => unsubscribe();
   }, [roomId]);
+
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === "reloadRoom") {
+        // Sayfa tamamen yenilenir.
+        window.location.reload();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
 
   const handleFinalizeGrouping = async () => {
     Swal.fire({
