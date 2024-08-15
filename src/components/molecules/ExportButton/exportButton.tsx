@@ -1,11 +1,9 @@
 import React from "react";
-import { Room } from "@/types/dashboard";
 import { PDFDocument, rgb } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
-import { Button, message } from "antd";
+import { message } from "antd";
 import { collection, getDocs, getDoc, doc, query, where } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
-import styles from "./index.module.scss";
 import Buttons from "@/components/atoms/buttons/button";
 
 interface ExportButtonProps {
@@ -87,7 +85,7 @@ const ExportButton: React.FC<ExportButtonProps> = ({ roomId }) => {
 
       return {
         templateId,
-        templateName: roomData.template_name,
+        templateName: templateData.name,
         isActive: roomData.is_active,
         created_at: roomData.created_at,
         steps: stepsList,
@@ -119,14 +117,14 @@ const ExportButton: React.FC<ExportButtonProps> = ({ roomId }) => {
       );
       const customFont = await pdfDoc.embedFont(fontBytes);
 
-      let page = pdfDoc.addPage([600, 400]);
+      let page = pdfDoc.addPage([595, 842]);
 
       const addPageHeader = (page: any, title: string) => {
         page.setFont(customFont);
         page.setFontSize(16);
         page.drawText(textToPDF(title), {
           x: 50,
-          y: 350,
+          y: 800,
           color: rgb(0, 0, 0),
         });
       };
@@ -137,13 +135,13 @@ const ExportButton: React.FC<ExportButtonProps> = ({ roomId }) => {
       page.setFontSize(12);
       page.drawText(textToPDF(`- Şablon Adı: ${templateName}`), {
         x: 50,
-        y: 320,
+        y: 770,
       });
       page.drawText(
         textToPDF(`- Durum: ${isActive ? "Aktif" : "Pasif"}`),
         {
           x: 50,
-          y: 300,
+          y: 750,
         }
       );
       page.drawText(
@@ -154,21 +152,11 @@ const ExportButton: React.FC<ExportButtonProps> = ({ roomId }) => {
         ),
         {
           x: 50,
-          y: 280,
+          y: 730,
         }
       );
 
-      let currentY = 240;
-
-      const checkAndAddPage = () => {
-        if (currentY < 50) {
-          page = pdfDoc.addPage([600, 400]);
-          currentY = 350;
-
-          page.setFont(customFont);
-          page.setFontSize(12);
-        }
-      };
+      let currentY = 700;
 
       steps.forEach((step: any) => {
         page.setFontSize(14);
@@ -176,19 +164,23 @@ const ExportButton: React.FC<ExportButtonProps> = ({ roomId }) => {
           x: 50,
           y: currentY,
         });
-        currentY -= 30;
-        checkAndAddPage();
+        currentY -= 20;
 
-        page.setFontSize(12);
         const stepComments = comments[step.id];
         if (stepComments && stepComments.length > 0) {
           stepComments.forEach((comment: any) => {
-            page.drawText(textToPDF(`• ${comment.message}`), {
+            // Basit metin yerleşimi, satır sarma olmadan
+            page.drawText(`• ${textToPDF(comment.message)}`, {
               x: 70,
               y: currentY,
             });
             currentY -= 20;
-            checkAndAddPage();
+            if (currentY < 50) {
+              page = pdfDoc.addPage([595, 842]);
+              currentY = 800;
+              page.setFont(customFont);
+              page.setFontSize(12);
+            }
           });
         } else {
           page.drawText(textToPDF("• Bu adım için yorum bulunmamaktadır."), {
@@ -196,11 +188,9 @@ const ExportButton: React.FC<ExportButtonProps> = ({ roomId }) => {
             y: currentY,
           });
           currentY -= 20;
-          checkAndAddPage();
         }
 
-        currentY -= 30;
-        checkAndAddPage();
+        currentY -= 20;
       });
 
       if (meetingNotes.length > 0) {
@@ -210,16 +200,22 @@ const ExportButton: React.FC<ExportButtonProps> = ({ roomId }) => {
           y: currentY,
         });
         currentY -= 20;
-        checkAndAddPage();
 
         meetingNotes.forEach((note: any, index: number) => {
           page.setFontSize(12);
-          page.drawText(textToPDF(`• Not ${index + 1}: ${note.description}`), {
+          // Tek seferde uzun metin ekleyin, basitçe sayfa taşarsa yeni sayfa açın
+          page.drawText(`• Not ${index + 1}: ${textToPDF(note.description)}`, {
             x: 70,
             y: currentY,
           });
           currentY -= 20;
-          checkAndAddPage();
+
+          if (currentY < 50) {
+            page = pdfDoc.addPage([595, 842]);
+            currentY = 800;
+            page.setFont(customFont);
+            page.setFontSize(12);
+          }
         });
       } else {
         page.drawText(textToPDF("Toplantı notları bulunmamaktadır."), {
@@ -227,7 +223,6 @@ const ExportButton: React.FC<ExportButtonProps> = ({ roomId }) => {
           y: currentY,
         });
         currentY -= 20;
-        checkAndAddPage();
       }
 
       const fileName = templateName
@@ -254,7 +249,6 @@ const ExportButton: React.FC<ExportButtonProps> = ({ roomId }) => {
     <Buttons
       onClick={handleExport}
       text="Export"
-      className={styles.exportButton}
     />
   );
 };
