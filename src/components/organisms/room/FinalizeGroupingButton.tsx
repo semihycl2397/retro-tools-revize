@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import Buttons from "@/components/atoms/buttons/button";
 
@@ -57,6 +57,26 @@ const FinalizeGroupingButton: React.FC<FinalizeGroupingButtonProps> = ({
 
     fetchRoomDetails();
   }, [roomId, templateOwnerId]);
+
+  useEffect(() => {
+    if (typeof roomId !== "string" || !roomId) {
+      return;
+    }
+
+    const roomRef = doc(db, "rooms", roomId);
+    
+    const unsubscribe = onSnapshot(roomRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const roomData = snapshot.data();
+        if (roomData.is_finished || roomData.is_finalized) {
+      
+          window.location.reload();
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, [roomId]);
 
   const handleFinalizeGrouping = async () => {
     Swal.fire({

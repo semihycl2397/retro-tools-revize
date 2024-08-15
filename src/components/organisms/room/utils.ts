@@ -316,7 +316,7 @@ export const updateCommentLikes = async (
               likes: increment(newVote === 1 ? 1 : 0),
               dislikes: increment(newVote === -1 ? 1 : 0),
             }),
-        [`userVotes.${actualUserId}`]: newVote,
+   
       };
 
       await updateDoc(ref, updates);
@@ -357,6 +357,7 @@ export const updateCommentLikes = async (
     console.error("Error updating comment likes/dislikes:", error);
   }
 };
+
 
 export const saveCommentGroup = async (
   groupId: string,
