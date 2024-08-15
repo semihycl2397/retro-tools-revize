@@ -14,7 +14,7 @@ interface Comment {
 
 interface CommentGroup {
   id: string;
-  comments: string[]; // Grup içindeki yorum ID'leri
+  comments: string[];
   total_likes: number;
   total_dislikes: number;
 }
@@ -49,7 +49,6 @@ const TopVotedComments: React.FC<{ roomId: string }> = ({ roomId }) => {
         const groupData = groupDoc.data() as CommentGroup;
         const groupComments: Comment[] = [];
 
-        // Her bir yorum ID'si için comments tablosundan ilgili veriyi çekiyoruz
         for (const commentId of groupData.comments) {
           const commentDoc = await getDoc(doc(db, "comments", commentId));
           if (commentDoc.exists()) {
@@ -59,7 +58,7 @@ const TopVotedComments: React.FC<{ roomId: string }> = ({ roomId }) => {
 
         allGroups.push({
           ...groupData,
-          comments: groupComments.map((c) => c.message), // Grup içindeki yorumların mesajlarını alıyoruz
+          comments: groupComments.map((c) => c.message),
         });
       }
 
@@ -85,10 +84,10 @@ const TopVotedComments: React.FC<{ roomId: string }> = ({ roomId }) => {
   ) => (
     <Col span={12} key={comment.id} style={{ marginBottom: "16px" }}>
       <Card className={isGroup ? styles.commentCard : styles.singleCommentCard}>
-        <p>{isGroup ? `Grup: ${comment.comments.join(", ")}` : comment.message}</p> {/* Grup içindeki yorumları virgülle ayırarak gösteriyoruz */}
+        <p>{isGroup ? `Grup: ${(comment as CommentGroup).comments.join(", ")}` : (comment as Comment).message}</p>
         <p>
-          Likes: {isGroup ? (comment as CommentGroup).total_likes : comment.likes} | Dislikes:{" "}
-          {isGroup ? (comment as CommentGroup).total_dislikes : comment.dislikes}
+          Likes: {isGroup ? (comment as CommentGroup).total_likes : (comment as Comment).likes} | Dislikes:{" "}
+          {isGroup ? (comment as CommentGroup).total_dislikes : (comment as Comment).dislikes}
         </p>
       </Card>
     </Col>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { List, Input, message } from "antd";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import Buttons from "@/components/atoms/buttons/button";
 import TopVotedComments from "@/components/organisms/room/TopVotedComments";
@@ -94,7 +94,6 @@ const RoomTask: React.FC<RoomTaskProps> = ({ roomId }) => {
         )}
       />
 
-      {/* Top Voted Comments and Groups */}
       <TopVotedComments roomId={roomId} />
 
       <a href="/room-lists">
