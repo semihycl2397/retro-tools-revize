@@ -1,0 +1,49 @@
+.card {
+  height: 100%;
+  background: rgba(253, 254, 255, 0.68);
+  border-radius: 0px 20px 0px 20px;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  :global {
+    .ant-card-body {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-top: 2rem;
+      padding-bottom: 0;
+    }
+  }
+
+  .content {
+    flex-grow: 1;
+  }
+
+  .steps {
+    margin-bottom: 16px;
+    flex-grow: 1;
+
+    ul {
+      padding-left: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+
+      li {
+        background: #e0f7fa;
+        padding: 4px 8px;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  .cardActions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    padding-bottom: 16px;
+  }
+}
