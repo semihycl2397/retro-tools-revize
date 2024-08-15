@@ -67,7 +67,7 @@ const FinalizeGroupingButton: React.FC<FinalizeGroupingButtonProps> = ({
       confirmButtonColor: "#219ebc",
       cancelButtonColor: "rgba(99, 99, 99, 0.5) ",
       confirmButtonText: "Yes, finalize!",
-      cancelButtonText: " No, cancel",
+      cancelButtonText: "No, cancel",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -76,15 +76,15 @@ const FinalizeGroupingButton: React.FC<FinalizeGroupingButtonProps> = ({
             is_finished: true,
             is_finalized: true,
           });
-          if (!isFinalized) {
-            setIsFinalized(true);
-          }
+
+          setIsFinalized(true);
+          onFinalize();
+
           Swal.fire(
             "Concluded!",
             "Comments concluded successfully.",
             "success"
           );
-          onFinalize();
         } catch (error) {
           console.error("Error finalizing grouping:", error);
         }

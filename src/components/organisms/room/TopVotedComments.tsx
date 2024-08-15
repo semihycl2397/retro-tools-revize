@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card, List } from "antd";
-import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
+import { Row, Col, Card, List, Button } from "antd";
+import { LikeOutlined, DislikeOutlined } from "@ant-design/icons";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import styles from "./index.module.scss";
 
@@ -82,37 +90,71 @@ const TopVotedComments: React.FC<{ roomId: string }> = ({ roomId }) => {
     index: number,
     isGroup: boolean
   ) => (
-    <Col span={12} key={comment.id} style={{ marginBottom: "16px" }}>
-      <Card className={isGroup ? styles.commentCard : styles.singleCommentCard}>
-        <p>{isGroup ? `Grup: ${(comment as CommentGroup).comments.join(", ")}` : (comment as Comment).message}</p>
-        <p>
-          Likes: {isGroup ? (comment as CommentGroup).total_likes : (comment as Comment).likes} | Dislikes:{" "}
-          {isGroup ? (comment as CommentGroup).total_dislikes : (comment as Comment).dislikes}
-        </p>
-      </Card>
-    </Col>
+    <div className={styles.commentListItem}>
+      <Col span={12} key={comment.id} style={{ marginBottom: "16px" }}>
+        <Card
+          className={isGroup ? styles.commentCard : styles.singleCommentCard}
+          actions={
+            isGroup
+              ? [
+                  <Button icon={<LikeOutlined />}>
+                    {(comment as CommentGroup).total_likes}
+                  </Button>,
+                  <Button icon={<DislikeOutlined />}>
+                    {(comment as CommentGroup).total_dislikes}
+                  </Button>,
+                ]
+              : [
+                  <Button icon={<LikeOutlined />}>
+                    {(comment as Comment).likes}
+                  </Button>,
+                  <Button icon={<DislikeOutlined />}>
+                    {(comment as Comment).dislikes}
+                  </Button>,
+                ]
+          }
+        >
+          {isGroup ? (
+            (comment as CommentGroup).comments.map((message, index) => (
+              <div
+                key={index}
+                className={`${styles.groupedComment} ${
+                  index === 0 ? styles.groupedCommentActive : ""
+                }`}
+              >
+                {message}
+              </div>
+            ))
+          ) : (
+            <div className={styles.groupedComment}>
+              {(comment as Comment).message}
+            </div>
+          )}
+        </Card>
+      </Col>
+    </div>
   );
 
   return (
     <div>
-      <h3>En Çok Oy Alan Yorumlar ve Gruplar</h3>
+      <h2>Top Voted Comments and Groups</h2>
       <Row gutter={[16, 16]}>
         <Col span={12}>
-          <h4>En Çok Oy Alan Yorumlar</h4>
+          <h4>Top Voted Comments</h4>
           <List
             grid={{ gutter: 16, column: 1 }}
             dataSource={topComments}
-            renderItem={(comment, index) => renderComment(comment, index, false)}
+            renderItem={(comment, index) =>
+              renderComment(comment, index, false)
+            }
           />
         </Col>
         <Col span={12}>
-          <h4>En Çok Oy Alan Yorum Grupları</h4>
+          <h3>Top Voted Comment Groups</h3>
           <List
             grid={{ gutter: 16, column: 1 }}
             dataSource={topGroups}
-            renderItem={(group, index) =>
-              renderComment(group, index, true)
-            }
+            renderItem={(group, index) => renderComment(group, index, true)}
           />
         </Col>
       </Row>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Steps, Button, message } from "antd";
+import { Steps } from "antd";
 import { useRouter } from "next/router";
 import io from "socket.io-client";
 import { auth } from "@/firebaseConfig";
@@ -16,6 +16,8 @@ import {
   fetchUserVotes,
 } from "./utils";
 import { Comment, Step } from "./utils";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebaseConfig";
 
 const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
 if (!socketUrl) {
@@ -27,10 +29,10 @@ const Room: React.FC = () => {
   const [comments, setComments] = useState<{ [key: string]: Comment[] }>({});
   const [newComments, setNewComments] = useState<{ [key: string]: string }>({});
   const [isFinalized, setIsFinalized] = useState(false);
+  const [isActive, setIsActive] = useState(true);
 
   const [steps, setSteps] = useState<Step[]>([]);
   const [templateOwnerId, setTemplateOwnerId] = useState<string | null>(null);
-  const [isActive, setIsActive] = useState(true);
   const [totalVotes, setTotalVotes] = useState<number>(0);
   const [userVotes, setUserVotes] = useState<{ [key: string]: number }>({});
   const [actualUserId, setActualUserId] = useState<string>("");
@@ -106,22 +108,38 @@ const Room: React.FC = () => {
   }, [roomId, actualUserId]);
 
   useEffect(() => {
-    if (!isActive) {
-      setCurrentStep(1);
-    }
-  }, [isActive]);
+    const checkFinalizedStatus = async () => {
+      if (roomId && typeof roomId === "string") {
+        const roomRef = doc(db, "rooms", roomId);
+        const roomDoc = await getDoc(roomRef);
+
+        if (roomDoc.exists()) {
+          const roomData = roomDoc.data();
+          if (roomData.is_finalized) {
+            setIsFinalized(true);
+            setCurrentStep(2);
+          } else if (!roomData.is_active) {
+            setCurrentStep(1);
+          } else {
+            setCurrentStep(0);
+          }
+        }
+      }
+    };
+
+    checkFinalizedStatus();
+  }, [roomId]);
 
   const next = () => {
-    setCurrentStep(currentStep + 1);
-  };
-
-  const prev = () => {
-    setCurrentStep(currentStep - 1);
+    if (currentStep === 1 && !isFinalized) {
+      setIsFinalized(true);
+    }
+    setCurrentStep((prev) => prev + 1);
   };
 
   const stepsContent = [
     {
-      title: "Yorum Yapma",
+      title: "Comments",
       content: (
         <div>
           <StepList
@@ -145,12 +163,13 @@ const Room: React.FC = () => {
             setIsActive={setIsActive}
             setIsFinalized={setIsFinalized}
             roomId={roomId as string}
+            onFinalize={next}
           />
         </div>
       ),
     },
     {
-      title: "Gruplama ve Oylama",
+      title: "Grouping and Voting",
       content: (
         <div>
           <StepList
@@ -181,7 +200,7 @@ const Room: React.FC = () => {
       ),
     },
     {
-      title: "Toplantı Notları",
+      title: "Meeting Notes",
       content: <RoomTask roomId={roomId as string} />,
     },
   ];
@@ -194,7 +213,6 @@ const Room: React.FC = () => {
         ))}
       </Steps>
       <div style={{ marginTop: 24 }}>{stepsContent[currentStep].content}</div>
-      <div style={{ marginTop: 24 }}></div>
     </div>
   );
 };

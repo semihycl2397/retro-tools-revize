@@ -1,5 +1,7 @@
 import React from "react";
-import { finalizeComments } from "./utils";
+import Swal from "sweetalert2";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/firebaseConfig";
 import Buttons from "@/components/atoms/buttons/button";
 
 interface FinalizeButtonProps {
@@ -9,6 +11,7 @@ interface FinalizeButtonProps {
   setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
   setIsFinalized: React.Dispatch<React.SetStateAction<boolean>>;
   roomId: string;
+  onFinalize: () => void;
 }
 
 const FinalizeButton: React.FC<FinalizeButtonProps> = ({
@@ -18,25 +21,47 @@ const FinalizeButton: React.FC<FinalizeButtonProps> = ({
   setIsActive,
   setIsFinalized,
   roomId,
+  onFinalize,
 }) => {
-  const handleFinalize = () => {
-    finalizeComments(
-      roomId,
-      (newIsActive) => {
-        setIsActive(newIsActive);
-        if (!newIsActive) {
-          console.log("Finalizing: Setting isFinalized to false");
-          setIsFinalized(false);
+  const handleFinalize = async () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This will finalize the comments step!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#219ebc",
+      cancelButtonColor: "rgba(99, 99, 99, 0.5)",
+      confirmButtonText: "Yes, finalize!",
+      cancelButtonText: "No, cancel",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const roomRef = doc(db, "rooms", roomId);
+          await updateDoc(roomRef, {
+            is_active: false,
+          });
+          setIsActive(false);
+          onFinalize();
+          Swal.fire(
+            "Finalized!",
+            "Comments step has been finalized.",
+            "success"
+          );
+        } catch (error) {
+          console.error("Error finalizing comments step:", error);
         }
-      },
-      setIsFinalized
-    );
+      }
+    });
   };
 
   return (
     <>
       {templateOwnerId === actualUserId && isActive && (
-        <Buttons text="Finished" onClick={handleFinalize} />
+        <Buttons
+          htmlType="button"
+          onClick={handleFinalize}
+          text="Finalize Comments"
+        />
       )}
     </>
   );

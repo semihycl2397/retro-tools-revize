@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { List, Input, message } from "antd";
-import { addDoc, collection, query, where, onSnapshot } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import Buttons from "@/components/atoms/buttons/button";
 import TopVotedComments from "@/components/organisms/room/TopVotedComments";
+import styles from "./index.module.scss";
 
 interface RoomTaskProps {
   roomId: string;
@@ -71,28 +78,35 @@ const RoomTask: React.FC<RoomTaskProps> = ({ roomId }) => {
 
   return (
     <div>
-      <h3>Meeting Notes</h3>
-      <Input.TextArea
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Enter your meeting notes here..."
-        rows={4}
-      />
-      <Buttons
-        htmlType="button"
-        onClick={handleSaveMeetingNote}
-        text="Save Meeting Note"
-      />
+      <div className={styles.roomTaskContainer}>
+        <div className={styles.meetingNoteSection}>
+          <h3>Meeting Notes</h3>
 
-      <h4 style={{ marginTop: "20px" }}>Notes</h4>
-      <List
-        dataSource={meetingNotes}
-        renderItem={(note) => (
-          <List.Item key={note.id}>
-            <List.Item.Meta description={note.description} />
-          </List.Item>
-        )}
-      />
+          <Input.TextArea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Enter your meeting notes here..."
+            rows={4}
+          />
+          <Buttons
+            htmlType="button"
+            onClick={handleSaveMeetingNote}
+            text="Save Meeting Note"
+          />
+        </div>
+
+        <div className={styles.notesListSection}>
+          <h3>Notes</h3>
+          <List
+            dataSource={meetingNotes}
+            renderItem={(note) => (
+              <List.Item key={note.id}>
+                <List.Item.Meta description={note.description} />
+              </List.Item>
+            )}
+          />
+        </div>
+      </div>
 
       <TopVotedComments roomId={roomId} />
 

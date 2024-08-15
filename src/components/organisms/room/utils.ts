@@ -224,7 +224,7 @@ export const initializeSnapshot = (
   onSnapshot(roomRef, (snapshot) => {
     const roomData = snapshot.data();
     if (roomData && roomData.is_active === false) {
-      setIsFinalized(true);
+      setIsFinalized(false);
       setIsActive(false);
     }
   });
@@ -259,43 +259,6 @@ export const sendComment = async (
   socket.emit("sendMessage", comment);
 };
 
-export const finalizeComments = async (
-  roomId: string | string[],
-  setIsActive: React.Dispatch<React.SetStateAction<boolean>>,
-  setIsFinalized: React.Dispatch<React.SetStateAction<boolean>>
-) => {
-  Swal.fire({
-    title: "Are you sure?",
-text: "You won't be able to revert this!",
-icon: "warning",
-showCancelButton: true,
-confirmButtonColor: "#219ebc",
-cancelButtonColor: "rgba(99, 99, 99, 0.5)",
-confirmButtonText: "Yes, finalize it!",
-cancelButtonText: "No, cancel",
-}).then(async (result) => {
-
-    if (result.isConfirmed) {
-      try {
-        const roomRef = doc(db, "rooms", roomId as string);
-        await updateDoc(roomRef, {
-          is_active: false,
-          is_finalized: false,
-        });
-        setIsActive(false);
-        setIsFinalized(false);
-        Swal.fire(
-          "Concluded!",
-          "Comments completed successfully.",
-          "success"
-        ).then(() => {});
-      } catch (error) {
-        console.error("Error updating document: ", error);
-      }
-    }
-  });
-};
-
 export const updateCommentLikes = async (
   commentId: string,
   stepId: string,
@@ -321,10 +284,10 @@ export const updateCommentLikes = async (
         const previousVote = userVote;
         if (previousVote === newVote) {
           Swal.fire({
-            title: "Hata",
-            text: "Bu yoruma zaten oy verdiniz.",
+            title: "Error",
+            text: "You have already voted for this comment.",
             icon: "error",
-            confirmButtonText: "Tamam",
+            confirmButtonText: "Ok",
           });
           return;
         } else {
@@ -501,5 +464,9 @@ export const fetchTopCommentsAndGroups = async (
 
 export const saveMeetingNotes = async (roomId: string, notes: string) => {
   const notesRef = doc(db, "meeting_notes", roomId);
-  await setDoc(notesRef, { description: notes, updated_at: new Date() }, { merge: true });
+  await setDoc(
+    notesRef,
+    { description: notes, updated_at: new Date() },
+    { merge: true }
+  );
 };

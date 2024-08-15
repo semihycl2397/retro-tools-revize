@@ -77,3 +77,29 @@
     margin-bottom: 4px;
   }
 }
+
+.roomTaskContainer {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  display: flex;
+  gap: 20px;
+  .roomTaskTitle {
+    display: inline;
+  }
+
+  .meetingNoteSection {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+  }
+  .notesListSection {
+    flex: 1;
+  }
+
+  .notesListSection {
+    h4 {
+      margin-top: 20px;
+    }
+  }
+}
