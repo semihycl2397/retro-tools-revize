@@ -5,11 +5,12 @@ import {
   collection,
   query,
   where,
-  onSnapshot,
+  onSnapshot
 } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import Buttons from "@/components/atoms/buttons/button";
 import TopVotedComments from "@/components/organisms/room/TopVotedComments";
+import ExportButton from "@/components/molecules/ExportButton/exportButton";
 import styles from "./index.module.scss";
 
 interface RoomTaskProps {
@@ -110,9 +111,7 @@ const RoomTask: React.FC<RoomTaskProps> = ({ roomId }) => {
 
       <TopVotedComments roomId={roomId} />
 
-      <a href="/room-lists">
-        <Buttons text="For Export" />
-      </a>
+      <ExportButton roomId={roomId} />
     </div>
   );
 };
