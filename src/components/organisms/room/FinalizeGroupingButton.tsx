@@ -12,14 +12,12 @@ interface FinalizeGroupingButtonProps {
   setIsFinalized: React.Dispatch<React.SetStateAction<boolean>>;
   actualUserId: string;
   roomId: string;
-  onFinalize: () => void;
 }
 
 const FinalizeGroupingButton: React.FC<FinalizeGroupingButtonProps> = ({
   templateOwnerId,
   actualUserId,
   roomId,
-  onFinalize,
   setIsFinalized,
   isFinalized,
   setTemplateOwnerId,
@@ -111,7 +109,6 @@ const FinalizeGroupingButton: React.FC<FinalizeGroupingButtonProps> = ({
           });
 
           setIsFinalized(true);
-          onFinalize();
 
           localStorage.setItem("reloadRoom", `${new Date().getTime()}`);
 

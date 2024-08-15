@@ -97,7 +97,7 @@ const Room: React.FC = () => {
 
   useEffect(() => {
     if (roomId && typeof roomId === "string") {
-      initializeSnapshot(roomId, setIsFinalized, setIsActive);
+      initializeSnapshot(roomId, setIsFinalized, setIsActive, setCurrentStep);
     }
   }, [roomId]);
 
@@ -106,29 +106,6 @@ const Room: React.FC = () => {
       fetchUserVotes(roomId, actualUserId, setUserVotes, setTotalVotes);
     }
   }, [roomId, actualUserId]);
-
-  useEffect(() => {
-    const checkFinalizedStatus = async () => {
-      if (roomId && typeof roomId === "string") {
-        const roomRef = doc(db, "rooms", roomId);
-        const roomDoc = await getDoc(roomRef);
-
-        if (roomDoc.exists()) {
-          const roomData = roomDoc.data();
-          if (roomData.is_finalized) {
-            setIsFinalized(true);
-            setCurrentStep(2);
-          } else if (!roomData.is_active) {
-            setCurrentStep(1);
-          } else {
-            setCurrentStep(0);
-          }
-        }
-      }
-    };
-
-    checkFinalizedStatus();
-  }, [roomId]);
 
   const next = () => {
     if (currentStep === 1 && !isFinalized) {
@@ -163,7 +140,6 @@ const Room: React.FC = () => {
             setIsActive={setIsActive}
             setIsFinalized={setIsFinalized}
             roomId={roomId as string}
-            onFinalize={next}
           />
         </div>
       ),
@@ -191,7 +167,6 @@ const Room: React.FC = () => {
             setTemplateOwnerId={setTemplateOwnerId}
             actualUserId={actualUserId}
             roomId={roomId as string}
-            onFinalize={next}
             isFinalized={isFinalized}
             setIsFinalized={setIsFinalized}
             setIsActive={setIsActive}

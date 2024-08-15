@@ -218,14 +218,28 @@ export const fetchUserVotes = async (
 export const initializeSnapshot = (
   roomId: string,
   setIsFinalized: React.Dispatch<React.SetStateAction<boolean>>,
-  setIsActive: React.Dispatch<React.SetStateAction<boolean>>
+  setIsActive: React.Dispatch<React.SetStateAction<boolean>>,
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const roomRef = doc(db, "rooms", roomId);
+
   onSnapshot(roomRef, (snapshot) => {
     const roomData = snapshot.data();
-    if (roomData && roomData.is_active === false) {
-      setIsFinalized(false);
-      setIsActive(false);
+    if (roomData) {
+      if (roomData.is_finalized) {
+        setIsFinalized(true);
+        setCurrentStep(2);
+      } else if (!roomData.is_active) {
+        setIsFinalized(false);
+
+        setIsActive(false);
+        setCurrentStep(1);
+      } else {
+        setIsFinalized(false);
+
+        setIsActive(true);
+        setCurrentStep(0);
+      }
     }
   });
 };
@@ -316,7 +330,6 @@ export const updateCommentLikes = async (
               likes: increment(newVote === 1 ? 1 : 0),
               dislikes: increment(newVote === -1 ? 1 : 0),
             }),
-   
       };
 
       await updateDoc(ref, updates);
@@ -357,7 +370,6 @@ export const updateCommentLikes = async (
     console.error("Error updating comment likes/dislikes:", error);
   }
 };
-
 
 export const saveCommentGroup = async (
   groupId: string,

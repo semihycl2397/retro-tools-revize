@@ -11,7 +11,6 @@ interface FinalizeButtonProps {
   setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
   setIsFinalized: React.Dispatch<React.SetStateAction<boolean>>;
   roomId: string;
-  onFinalize: () => void;
 }
 
 const FinalizeButton: React.FC<FinalizeButtonProps> = ({
@@ -21,7 +20,6 @@ const FinalizeButton: React.FC<FinalizeButtonProps> = ({
   setIsActive,
   setIsFinalized,
   roomId,
-  onFinalize,
 }) => {
   const handleFinalize = async () => {
     Swal.fire({
@@ -41,7 +39,7 @@ const FinalizeButton: React.FC<FinalizeButtonProps> = ({
             is_active: false,
           });
           setIsActive(false);
-          onFinalize();
+
           Swal.fire(
             "Finalized!",
             "Comments step has been finalized.",
