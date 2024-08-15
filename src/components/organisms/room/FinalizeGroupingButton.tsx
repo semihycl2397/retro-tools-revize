@@ -69,7 +69,6 @@ const FinalizeGroupingButton: React.FC<FinalizeGroupingButtonProps> = ({
       if (snapshot.exists()) {
         const roomData = snapshot.data();
         if (roomData.is_finished || roomData.is_finalized) {
-          // Diğer sekmeleri yenilemek için localStorage kullanıyoruz
           localStorage.setItem("reloadRoom", `${new Date().getTime()}`);
         }
       }
@@ -81,7 +80,6 @@ const FinalizeGroupingButton: React.FC<FinalizeGroupingButtonProps> = ({
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === "reloadRoom") {
-        // Sayfa tamamen yenilenir.
         window.location.reload();
       }
     };
@@ -114,6 +112,8 @@ const FinalizeGroupingButton: React.FC<FinalizeGroupingButtonProps> = ({
 
           setIsFinalized(true);
           onFinalize();
+
+          localStorage.setItem("reloadRoom", `${new Date().getTime()}`);
 
           Swal.fire(
             "Concluded!",
