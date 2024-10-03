@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import CommentList from "./commentList";
 import CommentInput from "./commentInput";
+import Timer from "./Timer"; // Timer bileşenini ekliyoruz
 import styles from "./index.module.scss";
 
 import {
@@ -32,6 +33,7 @@ interface StepListProps {
     React.SetStateAction<{ [key: string]: Comment[] }>
   >;
   setUserVotes: React.Dispatch<React.SetStateAction<{ [key: string]: number }>>;
+  templateOwnerId: string; // Timer bileşeni için ekliyoruz
 }
 
 const StepList: React.FC<StepListProps> = ({
@@ -47,6 +49,7 @@ const StepList: React.FC<StepListProps> = ({
   userVotes,
   setComments,
   setUserVotes,
+  templateOwnerId, // Timer bileşeni için ekliyoruz
 }) => {
   const [commentGroups, setCommentGroups] = useState<{
     [key: string]: string[];
@@ -297,53 +300,62 @@ const StepList: React.FC<StepListProps> = ({
   }, [roomId]);
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div className={styles.stepContainer}>
-        {steps.map((step, index) => (
-          <Droppable droppableId={String(index)} key={step.id} isCombineEnabled>
-            {(provided) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                className={styles.stepCard}
-              >
-                <h2>{step.name}</h2>
-                <CommentInput
-                  stepId={step.id}
-                  newComment={newComments[step.id] || ""}
-                  setNewComments={setNewComments}
-                  isActive={isActive}
-                  sendComment={sendComment}
-                />
-                <CommentList
-                  comments={comments[step.id]}
-                  isActive={isActive}
-                  userVotes={userVotes}
-                  updateCommentLikes={(commentId, stepId, newVote, isGroup) =>
-                    updateCommentLikes(
-                      commentId,
-                      stepId,
-                      newVote,
-                      actualUserId,
-                      setComments,
-                      setUserVotes,
-                      isGroup
-                    )
-                  }
-                  tempUserId={tempUserId}
-                  commentGroups={commentGroups}
-                  groupLikes={groupLikes}
-                  groupDislikes={groupDislikes}
-                />
-
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        ))}
-      </div>
-    </DragDropContext>
+    <>
+      {/* Timer bileşenini stepContainer'dan ayırarak yukarıya koyuyoruz */}
+      <Timer templateOwnerId={templateOwnerId} actualUserId={actualUserId} />
+  
+      {/* Timer ile stepContainer arasına boşluk koyuyoruz */}
+      <div className={styles.timerSpacing}></div>
+  
+      {/* Kartların bulunduğu alan */}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className={styles.stepContainer}>
+          {steps.map((step, index) => (
+            <Droppable droppableId={String(index)} key={step.id} isCombineEnabled>
+              {(provided) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className={styles.stepCard}
+                >
+                  <h2>{step.name}</h2>
+                  <CommentInput
+                    stepId={step.id}
+                    newComment={newComments[step.id] || ""}
+                    setNewComments={setNewComments}
+                    isActive={isActive}
+                    sendComment={sendComment}
+                  />
+                  <CommentList
+                    comments={comments[step.id]}
+                    isActive={isActive}
+                    userVotes={userVotes}
+                    updateCommentLikes={(commentId, stepId, newVote, isGroup) =>
+                      updateCommentLikes(
+                        commentId,
+                        stepId,
+                        newVote,
+                        actualUserId,
+                        setComments,
+                        setUserVotes,
+                        isGroup
+                      )
+                    }
+                    tempUserId={tempUserId}
+                    commentGroups={commentGroups}
+                    groupLikes={groupLikes}
+                    groupDislikes={groupDislikes}
+                  />
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          ))}
+        </div>
+      </DragDropContext>
+    </>
   );
+  
 };
 
 export default StepList;

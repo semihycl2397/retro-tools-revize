@@ -1,8 +1,10 @@
+/* Genel yapıyı düzene sokma */
 .stepContainer {
   margin: 2rem 0;
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+  justify-content: center; /* Kartların daha iyi hizalanması için */
 }
 
 .stepCard {
@@ -22,84 +24,55 @@
   }
 }
 
-.commentListItem {
-  margin-bottom: 8px;
-  border-radius: 4px;
-  padding: 8px;
-  overflow: hidden;
-
-  .commentCard {
-    margin-bottom: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    width: 100%;
-    box-sizing: border-box;
-
-    .commentCardBody {
-      padding: 8px;
-    }
-
-    .groupedComment {
-      font-weight: normal;
-      color: black;
-      padding: 10px;
-      border-left: 3px solid rgb(31, 185, 193);
-      background-color: #f5f6f7;
-      border-radius: 4px;
-      margin-bottom: 5px;
-      white-space: normal;
-      overflow: visible;
-      text-overflow: initial;
-      font-size: 14px;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-  }
-
-  .singleCommentCard {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 8px;
-    background-color: white;
-    margin-bottom: 8px;
-    width: 100%;
-  }
-
-  .buttonContainer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .skeletonPlaceholder {
-    margin-bottom: 4px;
-  }
+/* Timer düzeni */
+.timerContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem; /* Timer ile kartlar arasına mesafe koyma */
 }
 
-.roomTaskContainer {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
+.inputWrapper {
   display: flex;
-  gap: 20px;
-  .roomTaskTitle {
-    display: inline;
-  }
+  gap: 10px;
+  align-items: center; /* Input ve butonun dikey hizalanması */
+}
 
-  .meetingNoteSection {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    flex: 1;
-  }
-  .notesListSection {
-    flex: 1;
-  }
+.timerInput {
+  padding: 10px;
+  font-size: 14px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  width: 60px;
+  text-align: center;
+}
 
-  .notesListSection {
-    h4 {
-      margin-top: 20px;
-    }
-  }
+.timerButton {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.timerButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.timerButton:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.timerDisplay {
+  font-size: 18px;
+  color: #333;
+  margin-left: 10px; /* Zaman göstergesi butonlardan ayrı durması için */
+}
+.timerSpacing {
+  margin-bottom: 20px; /* Timer ile stepContainer arasında 20px boşluk */
 }
