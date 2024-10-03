@@ -1,10 +1,9 @@
-/* Genel yapıyı düzene sokma */
 .stepContainer {
   margin: 2rem 0;
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-  justify-content: center; /* Kartların daha iyi hizalanması için */
+  justify-content: center;
 }
 
 .stepCard {
@@ -30,13 +29,13 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1rem; /* Timer ile kartlar arasına mesafe koyma */
+  margin-bottom: 1rem;
 }
 
 .inputWrapper {
   display: flex;
   gap: 10px;
-  align-items: center; /* Input ve butonun dikey hizalanması */
+  align-items: center;
 }
 
 .timerInput {
@@ -71,8 +70,8 @@
 .timerDisplay {
   font-size: 18px;
   color: #333;
-  margin-left: 10px; /* Zaman göstergesi butonlardan ayrı durması için */
+  margin-left: 10px;
 }
 .timerSpacing {
-  margin-bottom: 20px; /* Timer ile stepContainer arasında 20px boşluk */
+  margin-bottom: 20px;
 }

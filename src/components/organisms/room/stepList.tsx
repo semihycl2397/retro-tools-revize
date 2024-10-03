@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import CommentList from "./commentList";
 import CommentInput from "./commentInput";
-import Timer from "./Timer"; // Timer bileşenini ekliyoruz
+import Timer from "./Timer";
 import styles from "./index.module.scss";
 
 import {
@@ -33,7 +33,7 @@ interface StepListProps {
     React.SetStateAction<{ [key: string]: Comment[] }>
   >;
   setUserVotes: React.Dispatch<React.SetStateAction<{ [key: string]: number }>>;
-  templateOwnerId: string; // Timer bileşeni için ekliyoruz
+  templateOwnerId: string;
 }
 
 const StepList: React.FC<StepListProps> = ({
@@ -49,7 +49,7 @@ const StepList: React.FC<StepListProps> = ({
   userVotes,
   setComments,
   setUserVotes,
-  templateOwnerId, // Timer bileşeni için ekliyoruz
+  templateOwnerId,
 }) => {
   const [commentGroups, setCommentGroups] = useState<{
     [key: string]: string[];
@@ -301,13 +301,12 @@ const StepList: React.FC<StepListProps> = ({
 
   return (
     <>
-      {/* Timer bileşenini stepContainer'dan ayırarak yukarıya koyuyoruz */}
+      
       <Timer templateOwnerId={templateOwnerId} actualUserId={actualUserId} />
   
-      {/* Timer ile stepContainer arasına boşluk koyuyoruz */}
+      
       <div className={styles.timerSpacing}></div>
   
-      {/* Kartların bulunduğu alan */}
       <DragDropContext onDragEnd={onDragEnd}>
         <div className={styles.stepContainer}>
           {steps.map((step, index) => (
